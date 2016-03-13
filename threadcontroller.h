@@ -14,6 +14,8 @@ public:
     explicit QThreadController(QObject *parent = 0);
     ~QThreadController();
 
+    QStringList _pages;
+
 signals:
 
 public slots:
@@ -29,7 +31,7 @@ private:
     QList<QUrl> _tasks;
     QVector<QThread *> _threads;
     QVector<QHttpWorker *> _workers;
-    QStringList _pages;
+
     int _max_task_count;
     int _current_task;
     QMutex _access_mutex;

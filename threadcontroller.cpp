@@ -56,7 +56,7 @@ void QThreadController::stopAllThreads()
 
 void QThreadController::addPage(QString page)
 {
-    qDebug()<<page;
+    _pages.append(page);
 }
 
 void QThreadController::workRequested()
@@ -66,7 +66,6 @@ void QThreadController::workRequested()
     if (worker){
         if (_current_task < _max_task_count){
             //_task_sem.acquire();
-            //_pages.append();
             QMetaObject::invokeMethod(worker, "startSearch", Qt::QueuedConnection,
                                       Q_ARG(QUrl, _tasks[_current_task]),
                                       Q_ARG(QString, _text));

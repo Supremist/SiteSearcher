@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     threadcontroller.cpp \
-    httpworker.cpp
+    httpworker.cpp \
+    qpageviewer.cpp
 
 HEADERS  += mainwindow.h \
     threadcontroller.h \
-    httpworker.h
+    httpworker.h \
+    qpageviewer.h
 
 FORMS    += mainwindow.ui
