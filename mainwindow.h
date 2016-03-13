@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "httpworker.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,8 +16,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void btn1Clicked();
+
 private:
     Ui::MainWindow *ui;
+    QHttpWorker _worker;
 };
 
 #endif // MAINWINDOW_H
