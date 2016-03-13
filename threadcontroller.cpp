@@ -31,16 +31,19 @@ void QThreadController::startSearch(QUrl url, QString text, int url_count, int t
         connect(_workers[i], SIGNAL(finished()), _threads[i], SLOT(quit()));
         connect(_workers[i], SIGNAL(finished()), _workers[i], SLOT(deleteLater()));
         connect(_threads[i], SIGNAL(finished()), _threads[i], SLOT(deleteLater()));
+
+        connect(_workers[i], SIGNAL(pageLoaded(QString)), this, SLOT(addPage(QString)));
+
         _threads[i]->start();
     }
 }
 
 void QThreadController::addTask(QUrl task)
 {
-    QMutexLocker locker(_access_mutex);
+    //QMutexLocker locker(_access_mutex);
     if (_tasks.indexOf(task) == -1){
         _tasks.push_back(task);
-        _task_sem.release();
+        //_task_sem.release();
     }
 }
 
@@ -51,12 +54,27 @@ void QThreadController::stopAllThreads()
     }
 }
 
+void QThreadController::addPage(QString page)
+{
+    qDebug()<<page;
+}
+
 void QThreadController::workRequested()
 {
-    QMutexLocker locker(_access_mutex);
-    QHttpWorker * worker = qobject_cast<QHttpWorker>(sender());
+    //QMutexLocker locker(_access_mutex);
+    QHttpWorker * worker = qobject_cast<QHttpWorker *>(sender());
     if (worker){
-
+        if (_current_task < _max_task_count){
+            //_task_sem.acquire();
+            //_pages.append();
+            QMetaObject::invokeMethod(worker, "startSearch", Qt::QueuedConnection,
+                                      Q_ARG(QUrl, _tasks[_current_task]),
+                                      Q_ARG(QString, _text));
+            _current_task++;
+        }
+        else{
+            stopAllThreads();
+        }
     }
 }
 

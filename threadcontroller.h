@@ -20,6 +20,7 @@ public slots:
     void startSearch(QUrl url, QString text, int url_count, int thread_count = 1);
     void addTask(QUrl task);
     void stopAllThreads();
+    void addPage(QString page);
 
 private slots:
     void workRequested();
@@ -28,6 +29,7 @@ private:
     QList<QUrl> _tasks;
     QVector<QThread *> _threads;
     QVector<QHttpWorker *> _workers;
+    QStringList _pages;
     int _max_task_count;
     int _current_task;
     QMutex _access_mutex;

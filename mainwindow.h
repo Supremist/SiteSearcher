@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "httpworker.h"
+#include "threadcontroller.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +22,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QHttpWorker _worker;
+    QThreadController _cnt;
 };
 
 #endif // MAINWINDOW_H

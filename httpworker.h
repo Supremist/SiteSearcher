@@ -38,6 +38,7 @@ public:
     explicit QHttpWorker(QObject *parent = 0);
     bool getPaused() const {QMutexLocker locker(&_pause_mutex); return _isPaused;}
     bool getWorking() const {QMutexLocker locker(&_pause_mutex); return _isWorking;}
+    QString getPage() const {QMutexLocker locker(&_pause_mutex); return _page;}
 
 signals:
     void requestWork();
@@ -45,6 +46,7 @@ signals:
     void urlFound(QUrl url);
     void textFound(int pos);
     void finished();
+    void pageLoaded(QString page);
 
 public slots:
     void start();
@@ -52,13 +54,13 @@ public slots:
     void pause();
     void resume();
     void stop();
-    void setPaused(bool pause_state) {if (pause_state) pause(); else resume();}
+    void setPause(bool pause_state) {if (pause_state) pause(); else resume();}
 
 private slots:
     void replyRecived(QNetworkReply * reply);
 
 private:
-    bool setWorking(bool working_state) {QMutexLocker locker(&_pause_mutex); _isWorking = working_state;}
+    void setWorking(bool working_state) {QMutexLocker locker(&_pause_mutex); _isWorking = working_state;}
     void findUrls();
     void findText();
 
@@ -67,7 +69,7 @@ private:
     bool _isPaused;
     QSemaphore _pause_sem;
     mutable QMutex _pause_mutex;
-    QNetworkAccessManager _namanager;
+    //QNetworkAccessManager _namanager;
     QString _text;
     QString _page;
 };

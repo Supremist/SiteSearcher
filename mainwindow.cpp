@@ -20,5 +20,5 @@ void MainWindow::btn1Clicked()
     //_worker.searchUrl(QUrl("http://www.google.com.ua/"), QString("text"));
     //QStringList lst = QString("error,httptest sldoec,ksdlkfhttp://tss ssdsdf, sdscshttp://stackoverflow.com/questions/5999967/get-plain-text-from-qstring-with-html-tags<> sdls").split(',');
     //_worker.findUrls(lst);
-
+    _cnt.startSearch(QUrl("http://www.google.com.ua/"), QString("text"), 1);
 }
