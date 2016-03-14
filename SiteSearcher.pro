@@ -18,11 +18,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     threadcontroller.cpp \
     httpworker.cpp \
-    qpageviewer.cpp
+    qpageviewer.cpp \
+    qtasklist.cpp
 
 HEADERS  += mainwindow.h \
     threadcontroller.h \
     httpworker.h \
-    qpageviewer.h
+    qpageviewer.h \
+    qtasklist.h
 
 FORMS    += mainwindow.ui

@@ -23,14 +23,19 @@ void QPageViewer::disconnectUI()
 
 void QPageViewer::viewPage(int index)
 {
-    if(index < _headers.size() && _text_browser && _list_widget){
-        if(_list_widget->currentRow() != index)
-            _list_widget->setCurrentRow(index);
-        _text_browser->clear();
-        _text_browser->setTextBackgroundColor(Qt::white);
-        _text_browser->setPlainText(_pages[index]);
-        foreach (const QPoint & selection, _highlighted[index]) {
-            highlightText(selection.x(), selection.y());
+    if (_text_browser && _list_widget){
+        if (index < 0 ){
+            _text_browser->clear();
+        }
+        else if(index < _headers.size()){
+            if(_list_widget->currentRow() != index)
+                _list_widget->setCurrentRow(index);
+            _text_browser->clear();
+            _text_browser->setTextBackgroundColor(Qt::white);
+            _text_browser->setPlainText(_pages[index]);
+            foreach (const QPoint & selection, _highlighted[index]) {
+                highlightText(selection.x(), selection.y());
+            }
         }
     }
 }
