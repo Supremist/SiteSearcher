@@ -12,7 +12,6 @@
 #include <QMutexLocker>
 #include <QVector>
 #include <QPoint>
-#include "qtasklist.h"
 #include <QDebug>
 
 
@@ -21,18 +20,23 @@ class QHttpWorker : public QObject
     Q_OBJECT
     Q_PROPERTY(bool isPaused  READ getPaused  WRITE setPause)
     Q_PROPERTY(bool isWorking READ getWorking WRITE setWorking)
+    Q_PROPERTY(int workerId READ getId WRITE setId)
+
 
 public:
     explicit QHttpWorker(QObject *parent = 0);
-    bool setTaskList(QTaskList * tasks);
+    ~QHttpWorker();
     bool getPaused() const {QMutexLocker locker(&_pause_mutex); return _isPaused;}
     bool getWorking() const {QMutexLocker locker(&_pause_mutex); return _isWorking;}
+    int getId() const {QMutexLocker locker(&_pause_mutex); return _id;}
+    void setId(int id) {QMutexLocker locker(&_pause_mutex); _id = id;}
     QString getPage() const {QMutexLocker locker(&_pause_mutex); return _page;}
 
 signals:
     void searchFinished(QString header, QString page, QVector<QPoint> positions);
     void urlFound(QUrl url);
     void finished();
+     void requestWork(int id);
 
 public slots:
     void start();
@@ -46,18 +50,17 @@ private slots:
     void replyRecived(QNetworkReply * reply);
 
 private:
-    void requestWork();
     void setWorking(bool working_state) {QMutexLocker locker(&_pause_mutex); _isWorking = working_state;}
     void findUrls();
     void findText();
 
     bool _isWorking;
     bool _isPaused;
-    QTaskList * _tasks;
     QSemaphore _pause_sem;
     mutable QMutex _pause_mutex;
     QNetworkAccessManager * _namanager;
     QVector<QPoint> * _found_pos;
+    int _id;
     QString _text;
     QUrl _url;
     QString _page;

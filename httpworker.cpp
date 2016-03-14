@@ -4,17 +4,15 @@ QHttpWorker::QHttpWorker(QObject *parent) : QObject(parent),
     _isWorking(false),
     _isPaused(true),
     _namanager(nullptr),
-    _found_pos(nullptr)
+    _found_pos(nullptr),
+    _id(0)
 {
 
 }
 
-bool QHttpWorker::setTaskList(QTaskList *tasks)
+QHttpWorker::~QHttpWorker()
 {
-    QMutexLocker locker(&_pause_mutex);
-    if (!isWorking)
-        _tasks = tasks;
-    return !isWorking;
+    qDebug()<<_id<<" Destroyed";
 }
 
 void QHttpWorker::start()
@@ -22,13 +20,14 @@ void QHttpWorker::start()
     if (!_isWorking){
         if (!_namanager){
             _namanager = new QNetworkAccessManager();
+            qDebug()<<_id<<"NA created";
             connect(_namanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyRecived(QNetworkReply*)));
         }
         if (!_found_pos){
             _found_pos = new QVector<QPoint>();
         }
         qRegisterMetaType<QVector<QPoint> >("QVector<QPoint>");
-        requestWork();
+        //requestWork();
     }
 }
 
@@ -37,10 +36,11 @@ void QHttpWorker::startSearch(QUrl url, QString text)
 {
     if (!_isWorking){
         resume();
+        _isWorking = true;
         _text = text;
         _url = url;
         _found_pos->clear();
-        qDebug()<<"GET send";
+        qDebug()<<_id<<"GET send";
         _namanager->get(QNetworkRequest(url));
 
     }
@@ -63,6 +63,7 @@ void QHttpWorker::resume()
 
 void QHttpWorker::stop()
 {
+    qDebug()<<_id<<" Stopped";
     delete _namanager;
     delete _found_pos;
     emit finished();
@@ -78,18 +79,11 @@ void QHttpWorker::replyRecived(QNetworkReply *reply)
     qDebug()<<"Reply recived";
     findUrls();
     findText();
-    _isWorking = false;
-    QString header = _url.toString() + " - " + _found_pos->size() + " matces";
+    setWorking (false);
+    QString header = _url.toString() + " - " + QString::number(_found_pos->size()) + " matches";
     emit searchFinished(header, _page, *_found_pos);
     qDebug()<<"Requesting work";
-    requestWork();
-}
-
-void QHttpWorker::requestWork()
-{
-    QUrl task = _tasks->getTask();
-    if (!task.isEmpty())
-        startSearch(task, _text);
+    requestWork(_id);
 }
 
 void QHttpWorker::findUrls()

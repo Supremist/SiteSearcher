@@ -24,10 +24,10 @@ void MainWindow::btn1Clicked()
     //QStringList lst = QString("error,httptest sldoec,ksdlkfhttp://tss ssdsdf, sdscshttp://stackoverflow.com/questions/5999967/get-plain-text-from-qstring-with-html-tags<> sdls").split(',');
     //_worker.findUrls(lst);
     vw.clear();
-    _cnt.startSearch(QUrl("http://www.google.com.ua/"), QString("<haed>"), 10, 5);
+    _cnt.startSearch(QUrl("http://www.google.com.ua/"), QString("<head>"), 12, 20);
 }
 
 void MainWindow::btn2Clicked()
 {
-
+vw.addPage("hhhhhh", "strssssssssss");
 }
