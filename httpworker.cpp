@@ -80,7 +80,10 @@ void QHttpWorker::replyRecived(QNetworkReply *reply)
     findUrls();
     findText();
     setWorking (false);
-    QString header = _url.toString() + " - " + QString::number(_found_pos->size()) + " matches";
+    QString header = _url.toString() + " - " + QString::number(_found_pos->size()) + " matches";;
+    if(reply->error() != QNetworkReply::NoError){
+        header += " "+reply->errorString();
+    }
     emit searchFinished(header, _page, *_found_pos);
     qDebug()<<"Requesting work";
     requestWork(_id);

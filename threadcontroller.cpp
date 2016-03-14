@@ -86,6 +86,7 @@ void QThreadController::stopAllThreads()
     _workers.clear();
     _threads.clear();
     emit searchFinished();
+    emit progressChanged(100);
 }
 
 void QThreadController::pauseAllThreads()
@@ -105,12 +106,12 @@ void QThreadController::workRequested(int worker_id)
         _finished_task++;
         _free_workers_count++;
         _isWorking[worker_id] = false;
+        emit progressChanged(round(_finished_task*100.0/_max_task_count));
         if (_current_task < _tasks.size())
             sendTask(worker_id);
         if (_free_workers_count == _workers.size()){
             stopAllThreads();
         }
-        emit progressChanged(round(_finished_task*100.0/_max_task_count));
     }
 }
 
