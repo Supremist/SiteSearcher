@@ -4,7 +4,7 @@ QHttpWorker::QHttpWorker(QObject *parent) : QObject(parent),
     _isWorking(false),
     _isPaused(true)
 {
-    //connect(&_namanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyRecived(QNetworkReply*)));
+
 }
 
 void QHttpWorker::start()

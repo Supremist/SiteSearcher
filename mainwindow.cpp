@@ -29,6 +29,9 @@ void MainWindow::btn2Clicked()
     vw.connectWithUI(ui->listWidget, ui->textBrowser);
     vw.clear();
     vw.addPage("first header", "test page");
+    QVector<QPoint> vc;
+    vc.append(QPoint(6, 10));
+    vc.append(QPoint(20, 5));
     vw.addPage("sec header", "test page\n second line");
-    vw.addPage("3 header", "test page\n second line\n\n 4line");
+    vw.addPage("3 header", "test page\n second line\n\n 4line", vc);
 }

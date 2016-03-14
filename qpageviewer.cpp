@@ -1,12 +1,15 @@
 #include "qpageviewer.h"
 
-QPageViewer::QPageViewer(QObject *parent) : QObject(parent)
+QPageViewer::QPageViewer(QObject *parent) : QObject(parent),
+    _list_widget(nullptr),
+    _text_browser(nullptr)
 {
 
 }
 
 void QPageViewer::connectWithUI(QListWidget *list_widget, QTextBrowser *text_browser)
 {
+    disconnectUI();
     _list_widget = list_widget;
     _text_browser = text_browser;
     connect(_list_widget, SIGNAL(currentRowChanged(int)), this, SLOT(viewPage(int)));
@@ -14,7 +17,8 @@ void QPageViewer::connectWithUI(QListWidget *list_widget, QTextBrowser *text_bro
 
 void QPageViewer::disconnectUI()
 {
-    disconnect(_list_widget, SIGNAL(currentRowChanged(int)), this, SLOT(viewPage(int)));
+    if (_list_widget)
+        disconnect(_list_widget, SIGNAL(currentRowChanged(int)), this, SLOT(viewPage(int)));
 }
 
 void QPageViewer::viewPage(int index)
@@ -23,6 +27,7 @@ void QPageViewer::viewPage(int index)
         if(_list_widget->currentRow() != index)
             _list_widget->setCurrentRow(index);
         _text_browser->clear();
+        _text_browser->setTextBackgroundColor(Qt::white);
         _text_browser->setPlainText(_pages[index]);
         foreach (const QPoint & selection, _highlighted[index]) {
             highlightText(selection.x(), selection.y());
