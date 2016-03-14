@@ -14,7 +14,8 @@ void QThreadController::startSearch(QUrl url, QString text, int url_count, int t
 {
     stopAllThreads();
     _tasks->clear();
-    _tasks->setMaxTaskCount(url_count);
+    _max_task_count = url_count;
+    _current_task = 0;
     _tasks->addTask(url);
 
     _text = text;
@@ -39,6 +40,15 @@ void QThreadController::startSearch(QUrl url, QString text, int url_count, int t
     }
 }
 
+void QThreadController::addTask(QUrl task)
+{
+    QMutexLocker locker(&_access_mutex);
+    if (_tasks.indexOf(task) == -1){
+        _tasks.push_back(task);
+        _task_sem.release();
+    }
+}
+
 
 void QThreadController::stopAllThreads()
 {
@@ -50,12 +60,18 @@ void QThreadController::stopAllThreads()
 }
 
 
-void QThreadController::workRequested()
+void QThreadController::workRequested(int worker_id)
 {
     QMutexLocker locker(&_access_mutex);
-    QHttpWorker * worker = qobject_cast<QHttpWorker *>(sender());
-    if (worker){
-
+    if (worker_id < _workers.size()){
+        if (_current_task < _max_task_count){
+            _task_sem.acquire();
+            return _tasks[_current_task++];
+        }
+        else{
+            emit maxTaskAchived();
+            return QUrl();
+        }
     }
 }
 

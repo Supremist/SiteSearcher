@@ -24,12 +24,16 @@ public slots:
     void stopAllThreads();
 
 private slots:
-    void workRequested();
+    void workRequested(int worker_id);
 
 private:
     QVector<QThread *> _threads;
     QVector<QHttpWorker *> _workers;
-    QTaskList * _tasks;
+    QList<QUrl> _tasks;
+    int _max_task_count;
+    int _current_task;
+    QMutex _access_mutex;
+    QSemaphore _task_sem;
     QString _text;
     //QList<int>
 };
