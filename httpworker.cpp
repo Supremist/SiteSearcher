@@ -28,7 +28,7 @@ void QHttpWorker::start()
             _found_pos = new QVector<QPoint>();
         }
         qRegisterMetaType<QVector<QPoint> >("QVector<QPoint>");
-        emit requestWork();
+        requestWork();
     }
 }
 
@@ -82,7 +82,14 @@ void QHttpWorker::replyRecived(QNetworkReply *reply)
     QString header = _url.toString() + " - " + _found_pos->size() + " matces";
     emit searchFinished(header, _page, *_found_pos);
     qDebug()<<"Requesting work";
-    emit requestWork();
+    requestWork();
+}
+
+void QHttpWorker::requestWork()
+{
+    QUrl task = _tasks->getTask();
+    if (!task.isEmpty())
+        startSearch(task, _text);
 }
 
 void QHttpWorker::findUrls()

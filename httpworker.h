@@ -30,7 +30,6 @@ public:
     QString getPage() const {QMutexLocker locker(&_pause_mutex); return _page;}
 
 signals:
-    void requestWork();
     void searchFinished(QString header, QString page, QVector<QPoint> positions);
     void urlFound(QUrl url);
     void finished();
@@ -47,6 +46,7 @@ private slots:
     void replyRecived(QNetworkReply * reply);
 
 private:
+    void requestWork();
     void setWorking(bool working_state) {QMutexLocker locker(&_pause_mutex); _isWorking = working_state;}
     void findUrls();
     void findText();
