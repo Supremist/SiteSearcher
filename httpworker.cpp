@@ -2,7 +2,7 @@
 
 QHttpWorker::QHttpWorker(QObject *parent) : QObject(parent),
     _isWorking(false),
-    _isPaused(true),
+    _isPaused(false),
     _namanager(nullptr),
     _found_pos(nullptr),
     _id(0)
@@ -35,7 +35,7 @@ void QHttpWorker::start()
 void QHttpWorker::startSearch(QUrl url, QString text)
 {
     if (!_isWorking){
-        resume();
+        //resume();
         _isWorking = true;
         _text = text;
         _url = url;
@@ -89,7 +89,7 @@ void QHttpWorker::replyRecived(QNetworkReply *reply)
 void QHttpWorker::findUrls()
 {
     QRegExp url_reqexp ("(http://[!#$&-;=?-\\[\\]_a-z~]+)");
-    int pos = 0;
+    int pos = 0;        
     while ((pos = url_reqexp.indexIn(_page, pos)) != -1) {
         if (_isPaused)
             _pause_sem.acquire();
@@ -102,7 +102,7 @@ void QHttpWorker::findText()
 {
     int pos = 0;
     int ln = _text.length();
-    while ((pos = _page.indexOf(_text, pos)) != -1) {
+    while ((pos = _page.indexOf(_text, pos, _case_sens)) != -1) {
         if (_isPaused)
             _pause_sem.acquire();
         _found_pos->append(QPoint(pos, _text.length()));

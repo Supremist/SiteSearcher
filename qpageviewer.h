@@ -23,10 +23,11 @@ public slots:
     void viewPage(int index);
     void clear();
     void addPage(QString header, QString page, QVector<QPoint> highlighted = QVector<QPoint>());
-    void refreshHeaders();
+    void refreshHeaders(bool show_all);
 
 private:
     void highlightText(const int start_pos, const int length);
+    bool _show_all;
     QListWidget * _list_widget;
     QTextBrowser * _text_browser;
     QStringList _pages;

@@ -30,6 +30,7 @@ public:
     bool getWorking() const {QMutexLocker locker(&_pause_mutex); return _isWorking;}
     int getId() const {QMutexLocker locker(&_pause_mutex); return _id;}
     void setId(int id) {QMutexLocker locker(&_pause_mutex); _id = id;}
+    void setCaseSensitive(bool cs) {QMutexLocker locker(&_pause_mutex); _case_sens =(cs? Qt::CaseSensitive : Qt::CaseInsensitive) ;}
     QString getPage() const {QMutexLocker locker(&_pause_mutex); return _page;}
 
 signals:
@@ -56,6 +57,7 @@ private:
 
     bool _isWorking;
     bool _isPaused;
+    Qt::CaseSensitivity  _case_sens;
     QSemaphore _pause_sem;
     mutable QMutex _pause_mutex;
     QNetworkAccessManager * _namanager;

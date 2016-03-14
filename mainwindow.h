@@ -21,12 +21,14 @@ public:
 public slots:
     void btn1Clicked();
     void btn2Clicked();
+    void searchFinished();
 
 private:
     Ui::MainWindow *ui;
-    QHttpWorker _worker;
-    QThreadController _cnt;
-    QPageViewer vw;
+    QThreadController thread_controller;
+    bool isPaused;
+    bool isSearching;
+    QPageViewer page_viewer;
 };
 
 #endif // MAINWINDOW_H
